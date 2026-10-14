@@ -146,6 +146,16 @@
             </h3>
 
             <div class="space-y-4 text-sm">
+              <!-- Platform Selector -->
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Social Platform</label>
+                <select id="input-platform" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500 transition mb-3">
+                  <option value="twitter">Twitter / X (Behavioral ML)</option>
+                  <option value="reddit">Reddit (Behavioral ML)</option>
+                  <option value="instagram">Instagram (Profile ML)</option>
+                </select>
+              </div>
+
               <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1">Username / Handle</label>
                 <div class="relative">
@@ -704,8 +714,66 @@
 
     // Execute prediction API call
     async function runManualInference() {
+      const platformElement = document.getElementById('input-platform');
+      const platform = platformElement ? platformElement.value : 'twitter';
+      const username = document.getElementById('input-username').value.trim() || 'user';
+
+      // --- INSTAGRAM LOGIC ---
+      if (platform === 'instagram') {
+        try {
+          const res = await fetch(`/detect/instagram/${encodeURIComponent(username)}`);
+          const result = await res.json();
+          
+          if (result.error) {
+            alert(result.error);
+            return;
+          }
+
+          // Parse confidence string and convert to numeric dashboard risk score
+          let confFloat = parseFloat(result.confidence);
+          let riskScore = result.prediction === "Fake Account" ? confFloat : (100 - confFloat);
+          
+          const mappedData = {
+              risk_score: riskScore,
+              risk_level: result.prediction === "Fake Account" ? "Critical Fraud Risk" : "Legitimate (Safe)",
+              predicted_class: result.prediction,
+              class_description: "Instagram profile evaluated based on follower/following network asymmetry, post count, and bio metadata.",
+              is_anomaly: false,
+              probabilities: {
+                  "Fake Account": result.prediction === "Fake Account" ? confFloat.toFixed(1) : (100 - confFloat).toFixed(1),
+                  "Genuine Account": result.prediction === "Genuine Account" ? confFloat.toFixed(1) : (100 - confFloat).toFixed(1)
+              },
+              radar_metrics: {
+                  "Network Asymmetry": riskScore > 50 ? 95 : 15,
+                  "Profile Anonymity": riskScore > 50 ? 90 : 10,
+                  "Content Redundancy": riskScore > 50 ? 80 : 20,
+                  "Temporal Automation": 0,
+                  "Scam Triggers": 0,
+                  "Outbound Velocity": 0
+              },
+              circadian_curve: new Array(24).fill(0).map(() => Math.floor(Math.random() * 5)),
+              raw_features: { circadian_entropy_norm: 0.1 },
+              explanations: [
+                  {
+                      direction: result.prediction === "Fake Account" ? "increases_risk" : "decreases_risk",
+                      label: "Instagram Metadata Signatures",
+                      contribution: confFloat.toFixed(1),
+                      diagnostic: "Evaluated using scraped live data matching Kaggle fake profile patterns."
+                  }
+              ]
+          };
+          updateResultsView(mappedData);
+        } catch (err) {
+          console.error('Instagram Inference error:', err);
+          alert("Failed to connect to the Instagram detection endpoint.");
+        }
+        return;
+      }
+      // --- END INSTAGRAM LOGIC ---
+
+      // Twitter / Reddit Logic
       const payload = {
-        username: document.getElementById('input-username').value.trim() || 'user',
+        username: username,
         account_age_days: parseInt(document.getElementById('input-age').value) || 30,
         followers_count: parseInt(document.getElementById('input-followers').value) || 0,
         following_count: parseInt(document.getElementById('input-following').value) || 0,
@@ -1096,8 +1164,7 @@
         <tbody class="divide-y divide-slate-800/60">
           ${matrix.map((row, i) => `
             <tr>
-              <td class="py-2 text-left text-slate-300 font-medium truncate max-w-[100px]">${classes[i]}</td>
-              ${row.map((val, j) => `
+              <td class="py-2 text-left text-slate-300 font-medium truncate max-w-[100px]">${classes[i]}</td>${row.map((val, j) => `
                 <td class="py-2 px-2 text-center ${i === j ? 'bg-indigo-500/20 text-indigo-300 font-bold' : 'text-slate-500'}">
                   ${val}
                 </td>
