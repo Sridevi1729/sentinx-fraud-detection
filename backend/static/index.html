@@ -47,7 +47,6 @@
     .radial-meter {
       transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    /* Custom scrollbars */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -126,7 +125,6 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="sample-buttons-container">
-          <!-- Loaded dynamically from /api/samples -->
           <div class="animate-pulse bg-slate-800/50 rounded-xl h-24 border border-slate-700/50"></div>
           <div class="animate-pulse bg-slate-800/50 rounded-xl h-24 border border-slate-700/50"></div>
           <div class="animate-pulse bg-slate-800/50 rounded-xl h-24 border border-slate-700/50"></div>
@@ -146,14 +144,15 @@
             </h3>
 
             <div class="space-y-4 text-sm">
-              <!-- Platform Selector -->
+              <!-- Platform Selection Tab-bar -->
               <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">Social Platform</label>
-                <select id="input-platform" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500 transition mb-3">
-                  <option value="twitter">Twitter / X (Behavioral ML)</option>
-                  <option value="reddit">Reddit (Behavioral ML)</option>
-                  <option value="instagram">Instagram (Profile ML)</option>
-                </select>
+                <label class="block text-xs font-medium text-slate-300 mb-2">Target Social Platform</label>
+                <div class="flex bg-slate-900/90 rounded-xl border border-slate-700 p-1 mb-2">
+                  <button type="button" onclick="selectPlatform('twitter')" id="plat-btn-twitter" class="flex-1 text-xs py-2 rounded-lg bg-indigo-600 text-white font-semibold transition-all shadow-sm">Twitter</button>
+                  <button type="button" onclick="selectPlatform('reddit')" id="plat-btn-reddit" class="flex-1 text-xs py-2 rounded-lg text-slate-400 hover:text-white font-medium transition-all">Reddit</button>
+                  <button type="button" onclick="selectPlatform('instagram')" id="plat-btn-instagram" class="flex-1 text-xs py-2 rounded-lg text-slate-400 hover:text-white font-medium transition-all">Instagram</button>
+                </div>
+                <input type="hidden" id="input-platform" value="twitter">
               </div>
 
               <div>
@@ -220,9 +219,7 @@
             </div>
             <p class="text-xs text-slate-400 mb-3">Contains post text, inter-arrival timestamps, and retweet markers used to compute burstiness, circadian entropy, and linguistic redundancy.</p>
 
-            <div id="posts-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
-              <!-- Dynamically populated -->
-            </div>
+            <div id="posts-container" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
 
             <button onclick="runManualInference()" class="w-full mt-5 py-3 px-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
@@ -267,9 +264,7 @@
                 </p>
 
                 <!-- Class Probabilities Breakdown -->
-                <div class="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono" id="probabilities-container">
-                  <!-- Filled via JS -->
-                </div>
+                <div class="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono" id="probabilities-container"></div>
               </div>
             </div>
           </div>
@@ -311,9 +306,7 @@
               </div>
             </div>
 
-            <div id="explanations-container" class="space-y-2.5">
-              <!-- Dynamically populated attribution rows -->
-            </div>
+            <div id="explanations-container" class="space-y-2.5"></div>
           </div>
 
         </div>
@@ -339,11 +332,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          <!-- SLIDERS CONTAINER (7 cols) -->
           <div class="lg:col-span-7 space-y-5">
-            
-            <!-- Burstiness Slider -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Temporal Burstiness ($B$)</span>
@@ -357,7 +346,6 @@
               </div>
             </div>
 
-            <!-- Circadian Flatness Slider -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Circadian 24/7 Flatness Entropy ($H_{norm}$)</span>
@@ -371,7 +359,6 @@
               </div>
             </div>
 
-            <!-- Outbound URL Density Slider -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Outbound URL / Link Density</span>
@@ -385,7 +372,6 @@
               </div>
             </div>
 
-            <!-- Scam / Urgency Trigger Score -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Scam & Phishing Urgency Keywords</span>
@@ -399,7 +385,6 @@
               </div>
             </div>
 
-            <!-- Template Repetition Similarity -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Post Text Repetition Similarity (Jaccard)</span>
@@ -413,7 +398,6 @@
               </div>
             </div>
 
-            <!-- Retweet Ratio Slider -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Retweet / Amplification Ratio</span>
@@ -427,7 +411,6 @@
               </div>
             </div>
 
-            <!-- Account Age Slider -->
             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-1.5">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-medium text-slate-200">Account Longevity</span>
@@ -440,7 +423,6 @@
                 <span>7+ Years</span>
               </div>
             </div>
-
           </div>
 
           <!-- REAL-TIME SIMULATION GAUGE & RADAR (5 cols) -->
@@ -464,13 +446,11 @@
                 <div class="text-slate-400">Anomaly Indicator: <span id="sandbox-anomaly-flag" class="font-mono text-emerald-400">Normal In-Distribution</span></div>
               </div>
 
-              <!-- Live Simulator Radar -->
               <div class="relative min-h-[260px] pt-2">
                 <canvas id="sandboxRadarChart"></canvas>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -479,8 +459,6 @@
     <!-- TAB 3: BATCH & MODEL PERFORMANCE           -->
     <!-- ========================================== -->
     <div id="tab-batch" class="hidden space-y-8">
-      
-      <!-- Metrics Overview Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="metrics-cards">
         <div class="glass-card rounded-2xl p-5 border-l-4 border-indigo-500">
           <span class="text-xs text-slate-400 font-medium">Model Test Accuracy</span>
@@ -504,10 +482,7 @@
         </div>
       </div>
 
-      <!-- Confusion Matrix Heatmap & Feature Importance Chart -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- Confusion Matrix (6 cols) -->
         <div class="lg:col-span-6 glass-card rounded-2xl p-6">
           <h3 class="text-base font-semibold text-white mb-2 flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
@@ -515,13 +490,10 @@
           </h3>
           <p class="text-xs text-slate-400 mb-4">Evaluates discrimination across Legitimate, Spambot, Phishing, and Sybil categories.</p>
           <div class="overflow-x-auto">
-            <table class="w-full text-center text-xs font-mono" id="confusion-matrix-table">
-              <!-- Rendered via JS -->
-            </table>
+            <table class="w-full text-center text-xs font-mono" id="confusion-matrix-table"></table>
           </div>
         </div>
 
-        <!-- Global Feature Importance (6 cols) -->
         <div class="lg:col-span-6 glass-card rounded-2xl p-6 flex flex-col">
           <h3 class="text-base font-semibold text-white mb-2 flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
@@ -532,10 +504,8 @@
             <canvas id="importanceChart"></canvas>
           </div>
         </div>
-
       </div>
 
-      <!-- Batch Accounts Inspection Table -->
       <div class="glass-card rounded-2xl p-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
@@ -563,20 +533,15 @@
                 <th class="py-2.5 px-3">Age</th>
               </tr>
             </thead>
-            <tbody id="batch-accounts-tbody" class="divide-y divide-slate-800/60">
-              <!-- Loaded dynamically via /api/batch-scan -->
-            </tbody>
+            <tbody id="batch-accounts-tbody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
       </div>
-
     </div>
-
   </main>
 
   <!-- JAVASCRIPT CONTROLLER -->
   <script>
-    // State variables
     let sampleProfiles = [];
     let currentPosts = [];
     let radarChart = null;
@@ -585,7 +550,21 @@
     let importanceChart = null;
     let simulationTimeout = null;
 
-    // Tab switcher
+    // Platform switcher tab behavior
+    function selectPlatform(platform) {
+      document.getElementById('input-platform').value = platform;
+      const platforms = ['twitter', 'reddit', 'instagram'];
+      
+      platforms.forEach(p => {
+        const btn = document.getElementById(`plat-btn-${p}`);
+        if (p === platform) {
+          btn.className = 'flex-1 text-xs py-2 rounded-lg bg-indigo-600 text-white font-semibold transition-all shadow-sm';
+        } else {
+          btn.className = 'flex-1 text-xs py-2 rounded-lg text-slate-400 hover:text-white font-medium transition-all';
+        }
+      });
+    }
+
     function switchTab(tabId) {
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
@@ -612,19 +591,16 @@
       }
     }
 
-    // Initialize application on page load
     async function initApp() {
       await fetchBenchmarkSamples();
       await fetchModelMetrics();
       await fetchBatchScan();
       
-      // Auto-load first sample profile (Legit Alex)
       if (sampleProfiles.length > 0) {
         loadProfileData(sampleProfiles[0]);
       }
     }
 
-    // Fetch preloaded benchmark cases from API
     async function fetchBenchmarkSamples() {
       try {
         const res = await fetch('/api/samples');
@@ -671,7 +647,6 @@
       }
     }
 
-    // Populate profile form and run inference
     function loadProfileData(sample) {
       const d = sample.data;
       document.getElementById('input-username').value = d.username;
@@ -689,7 +664,6 @@
       runManualInference();
     }
 
-    // Render list of recent posts in the left panel
     function renderPostsList() {
       const container = document.getElementById('posts-container');
       const badge = document.getElementById('post-count-badge');
@@ -712,13 +686,12 @@
       });
     }
 
-    // Execute prediction API call
     async function runManualInference() {
       const platformElement = document.getElementById('input-platform');
       const platform = platformElement ? platformElement.value : 'twitter';
       const username = document.getElementById('input-username').value.trim() || 'user';
 
-      // --- INSTAGRAM LOGIC ---
+      // --- INSTAGRAM PIPELINE ---
       if (platform === 'instagram') {
         try {
           const res = await fetch(`/detect/instagram/${encodeURIComponent(username)}`);
@@ -729,7 +702,6 @@
             return;
           }
 
-          // Parse confidence string and convert to numeric dashboard risk score
           let confFloat = parseFloat(result.confidence);
           let riskScore = result.prediction === "Fake Account" ? confFloat : (100 - confFloat);
           
@@ -769,9 +741,8 @@
         }
         return;
       }
-      // --- END INSTAGRAM LOGIC ---
 
-      // Twitter / Reddit Logic
+      // --- TWITTER & REDDIT PIPELINE ---
       const payload = {
         username: username,
         account_age_days: parseInt(document.getElementById('input-age').value) || 30,
@@ -798,19 +769,16 @@
       }
     }
 
-    // Update UI with inference results
     function updateResultsView(data) {
       const score = data.risk_score;
       const scoreEl = document.getElementById('risk-score-value');
       scoreEl.textContent = `${score.toFixed(1)}%`;
 
-      // Update circular gauge
       const circle = document.getElementById('gauge-circle');
       const maxOffset = 264;
       const offset = maxOffset - (maxOffset * (score / 100));
       circle.style.strokeDashoffset = offset;
 
-      // Color coding
       let colorClass = 'text-emerald-400';
       let bgClass = 'bg-emerald-500/10';
       let borderClass = 'border-emerald-500/30';
@@ -831,7 +799,6 @@
       circle.className = `radial-meter ${colorClass}`;
       document.getElementById('risk-banner-bg').className = `absolute -right-16 -top-16 w-56 h-56 rounded-full ${bgClass} blur-3xl pointer-events-none transition-all duration-700`;
 
-      // Classification details
       const badge = document.getElementById('risk-tier-badge');
       badge.textContent = data.risk_level;
       badge.className = `px-2.5 py-1 rounded-full text-xs font-semibold border ${tierClass}`;
@@ -839,7 +806,6 @@
       document.getElementById('prediction-title').textContent = data.predicted_class;
       document.getElementById('prediction-desc').textContent = data.class_description;
 
-      // Anomaly indicator
       const anomalyBadge = document.getElementById('anomaly-badge');
       if (data.is_anomaly) {
         anomalyBadge.classList.remove('hidden');
@@ -848,7 +814,6 @@
         anomalyBadge.classList.add('hidden');
       }
 
-      // Class probabilities
       const probContainer = document.getElementById('probabilities-container');
       probContainer.innerHTML = '';
       for (const [clsName, prob] of Object.entries(data.probabilities)) {
@@ -861,19 +826,15 @@
         probContainer.appendChild(pill);
       }
 
-      // Update Radar & Circadian Charts
       renderRadarChart(data.radar_metrics);
       renderCircadianChart(data.circadian_curve, data.raw_features.circadian_entropy_norm);
-
-      // Render Explainable AI Feature Attributions
       renderExplanations(data.explanations);
     }
 
-    // Render 6-axis Behavioral Radar Chart
     function renderRadarChart(metrics) {
       const labels = Object.keys(metrics);
       const values = Object.values(metrics);
-      const baselineValues = [15, 12, 5, 18, 20, 15]; // Healthy organic baseline
+      const baselineValues = [15, 12, 5, 18, 20, 15];
 
       const ctx = document.getElementById('radarChart').getContext('2d');
       if (radarChart) {
@@ -932,7 +893,6 @@
       });
     }
 
-    // Render 24-Hour Circadian Rhythm Chart
     function renderCircadianChart(curve, entropyNorm) {
       document.getElementById('circadian-entropy-label').textContent = `Entropy H = ${(entropyNorm * 4.585).toFixed(2)}`;
 
@@ -974,7 +934,6 @@
       });
     }
 
-    // Render Explainable AI Feature Attribution Bars
     function renderExplanations(explanations) {
       const container = document.getElementById('explanations-container');
       container.innerHTML = '';
@@ -1002,9 +961,6 @@
       });
     }
 
-    // ==========================================
-    // SANDBOX INTERACTIVE CONTROLLER
-    // ==========================================
     function initSandboxRadar() {
       const ctx = document.getElementById('sandboxRadarChart').getContext('2d');
       sandboxRadarChart = new Chart(ctx, {
@@ -1083,7 +1039,6 @@
         });
         const result = await res.json();
         
-        // Update sandbox gauge
         const score = result.risk_score;
         document.getElementById('sandbox-risk-score').textContent = `${score.toFixed(1)}%`;
         
@@ -1129,9 +1084,6 @@
       onSliderChange();
     }
 
-    // ==========================================
-    // BATCH SCAN & METRICS
-    // ==========================================
     async function fetchModelMetrics() {
       try {
         const res = await fetch('/api/metrics');
@@ -1142,10 +1094,7 @@
         document.getElementById('metric-f1').textContent = metrics.macro_f1.toFixed(3);
         document.getElementById('metric-samples').textContent = (metrics.train_samples + metrics.test_samples).toLocaleString();
 
-        // Render Confusion Matrix
         renderConfusionMatrix(metrics.confusion_matrix, metrics.classes);
-
-        // Render Feature Importance Chart
         renderImportanceChart(metrics.feature_importances);
       } catch (err) {
         console.error('Metrics error:', err);
@@ -1254,7 +1203,6 @@
       }
     }
 
-    // Run on startup
     window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
